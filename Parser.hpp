@@ -13,7 +13,4 @@ class Parser{
    
     
     bool getAddress(uint32_t &new_address);
-    
-
-
 };

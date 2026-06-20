@@ -6,6 +6,7 @@
 struct Block{
     bool val = false;
     uint32_t tag = 0;
+    int count = 0;
 };
 
 enum class Subst{
@@ -33,15 +34,21 @@ private:
     unsigned int compMisses;
     unsigned int capaMisses;
     unsigned int confMisses;
+    unsigned int nAccesses;
+    unsigned int nHit;
+    std::vector< int > waysCount;
 public:
+    Subst whatPolicy(const char &c);
     Cache(int argc, char**argv);
 
     void insert(const uint32_t &new_address);
     Type cacheType();
-    uint32_t getTag();
 
     void LRU   (const uint32_t &new_address);
     void RANDOM(const uint32_t &new_address);
     void FIFO  (const uint32_t &new_address);
+
+    const std::string& getBenchmark();
+    void printReport() const;
 };
 
