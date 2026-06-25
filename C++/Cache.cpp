@@ -25,13 +25,13 @@ Subst Cache::whatPolicy(const char &c){
 }
 
 Cache::Cache(int argc, char**argv) {
-        cache_name = (argv[0]);
-        sets = (std::stoi(argv[1]));
-        bSize = (std::stoi(argv[2]));
-        assoc = (std::stoi(argv[3]));
-        subst = (whatPolicy(argv[4][0]));
+        cache_name  = (argv[0]);
+        sets        = (std::stoi(argv[1]));
+        bSize       = (std::stoi(argv[2]));
+        assoc       = (std::stoi(argv[3]));
+        subst       = (whatPolicy(argv[4][0]));
         output_flag = (std::stoi(argv[5]));
-        benchmark = (argv[6]);
+        benchmark   = (argv[6]);
         compMisses = 0, capaMisses = 0, confMisses = 0, nAccesses = 0, nHit = 0;
         
         if  ( ( sets % 2 != 0 && sets != 1 ) || ( bSize % 2 != 0 && bSize != 1 ) || ( assoc % 2 != 0 && assoc != 1 ) )  {
@@ -176,7 +176,7 @@ const std::string& Cache::getBenchmark() {
 void Cache::printReport() const {
     uint32_t totalMisses = compMisses + capaMisses + confMisses;
 
-    double hitRate = (double) nHit / (double) nAccesses;
+    double hitRate  = (double) nHit / (double) nAccesses;
     double missRate = (double) totalMisses / (double) nAccesses;
     double compRate = (double) compMisses / (double) totalMisses;
     double capaRate = (double) capaMisses / (double) totalMisses;
