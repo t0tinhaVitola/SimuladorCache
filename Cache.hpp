@@ -29,7 +29,7 @@ private:
     uint32_t assoc;
     std::vector<std::vector<Block>> block;
     Subst subst;
-    bool output_flag;
+    int output_flag;
     std::string benchmark;
     unsigned int compMisses;
     unsigned int capaMisses;
