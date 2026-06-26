@@ -1,14 +1,15 @@
 #reg_nomes
 
 .eqv cache_atrib $s0
-.eqv compMisses $s1
-.eqv capaMisses $s2
-.eqv confMisses $s3
-.eqv nHit $s4
-.eqv nAce $s5
+.eqv cache_matrix $s1
+.eqv compMisses $s2
+.eqv capaMisses $s3
+.eqv confMisses $s4
+.eqv nHit $s5
+.eqv nAce $s6
 .eqv i $t1
 
-#argumentos
+#cache_struct
 
 .eqv cache_name 0
 .eqv sets  4      
@@ -18,11 +19,22 @@
 .eqv output_flag 20
 .eqv benchmark 24
 
-#enum
+
+#define 
+.eqv CACHE_SIZE 28
+.eqv MATRIX_MULT 5
+.eqv FILE_SIZE 12
+.eqv BUFFER_SIZE 4096
+#enum_policy
 
 .eqv RANDOM 0
 .eqv FIFO 1
 .eqv LRU 2
+
+#file_struct
+.eqv file 0
+.eqv read_bytes 4
+.eqv offset 8
 
 
 #macros
@@ -32,6 +44,12 @@ string: .asciiz %str
 .text
 li $v0, 4
 la $a0, string
+syscall
+.end_macro
+
+.macro print_char(%char)
+li $a0, %char
+li $v0, 11
 syscall
 .end_macro
 
@@ -76,6 +94,27 @@ lw $v1, %adress(%argv)
 
 .macro end
 li $v0, 10
+syscall
+.end_macro
+
+.macro openFile(%file_adress, %flag)
+move $a0, %file_adress
+li $a1, %flag
+li $v0, 13
+syscall
+.end_macro
+
+.macro readFile(%file, %buffer_adress, %read_amount)
+move $a0, %file
+move $a1, %buffer_adress
+move $a2, %read_amount
+
+li $v0, 14
+syscall
+.end_macro
+.macro closeFile(%file)
+move $a0, %file
+li $v0, 16
 syscall
 .end_macro
 

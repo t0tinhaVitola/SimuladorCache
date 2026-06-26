@@ -1,5 +1,5 @@
 .include "macros.asm"
-.globl cache_initialization
+.globl cache_initialization, print_cache
 .text
 
 
@@ -10,8 +10,18 @@ jal is_argc_7
 jal save_args
 
 
+load_arg(sets , cache_atrib)
+move $a0, $v1
+load_arg(assoc, cache_atrib)
+move $a1, $v1
+jal create_matrix 
+
+
 pop($ra)
 jr $ra
+
+
+
 
 
 
@@ -35,7 +45,7 @@ jr $ra
 save_args:
 
 push($ra)
-allocateByNum(28)
+allocateByNum(CACHE_SIZE)
 move cache_atrib, $v0
 
 load_arg(cache_name, $a1)
@@ -95,7 +105,6 @@ beq $t3, '\0', atoi_done
 blt $t3, '0' , not_number
 bgt $t3, '9' , not_number
 mul $v0, $v0, 10
-mflo $v0
 sub $t3, $t3, '0'
 add $v0, $v0, $t3
 addi $a2, $a2, 1
@@ -132,6 +141,8 @@ jr $ra
 
 
 
+
+
 what_policy:
 
 lb $t3, 1($a2)
@@ -163,12 +174,71 @@ jr $ra
 
 
 
+
 is_outputFlag:
 bnez $a2, flagONE
 
 printf("Não foi implementado código para output_flag = zero\n O código vai seguir como se fosse igual a 1\n")
 
 flagONE:
+jr $ra
+
+
+
+create_matrix:
+push($ra)
+mul $t3, $a0, $a1
+mul $t3, $t3, MATRIX_MULT
+allocateByReg($t3)
+move cache_matrix, $v0
+fill_args(cache_matrix, $t3, $zero, $zero)
+jal clear_mem
+
+
+
+pop($ra)
+jr $ra
+
+clear_mem: 
+clear_mem_loop:
+beqz $a1, clear_mem_done
+ble $a1, 3, byteByByte
+sw $zero, ($a0)
+addi $a1, $a1, -4
+addi $a0, $a0, 4
+j clear_mem_loop
+
+byteByByte:
+
+beqz $a1, clear_mem_done
+sb $zero, ($a0)
+addi $a1, $a1, -1
+addi $a0, $a0, 1
+j byteByByte
+
+clear_mem_done:
+jr $ra
+
+
+
+print_cache:
+
+print_char('\n')
+print_char('\n')
+print_char('\n')
+print_char('\n')
+print_char('\n')
+print_char('\n')
+print_char('\n')
+
+
+
+
+
+
+
+
+
 jr $ra
 
 
