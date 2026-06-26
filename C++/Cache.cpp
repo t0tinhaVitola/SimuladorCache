@@ -25,14 +25,14 @@ Subst Cache::whatPolicy(const char &c){
 }
 
 Cache::Cache(int argc, char**argv) {
-        cache_name = ( argv[0] );
-        sets = ( std::stoi( argv[1] ) );
-        bSize = ( std::stoi( argv[2] ) );
-        assoc = ( std::stoi( argv[3] ) );
-        subst = ( whatPolicy( argv[4][0] ) );
+        cache_name  = ( argv[0] );
+        sets        = ( std::stoi( argv[1] ) );
+        bSize       = ( std::stoi( argv[2] ) );
+        assoc       = ( std::stoi( argv[3] ) );
+        subst       = ( whatPolicy( argv[4][0] ) );
         output_flag = ( std::stoi( argv[5] ) );
-        benchmark = ( argv[6] );
-        compMisses = 0, capaMisses = 0, confMisses = 0, nAccesses = 0, nHit = 0;
+        benchmark   = ( argv[6] );
+        compMisses  = 0, capaMisses = 0, confMisses = 0, nAccesses = 0, nHit = 0;
         
         if  ( ( sets <= 0  || ( sets & ( sets - 1 ) ) != 0  ) || ( bSize <= 0 || ( bSize & ( bSize - 1 ) ) != 0 ) || ( assoc <= 0 || ( assoc & ( assoc - 1 ) ) != 0 ) )  {
             throw std::invalid_argument("Um dos parametros nao eh um numero válido\n");
@@ -159,16 +159,6 @@ void Cache::insert(const uint32_t &new_address){
     nAccesses += 1;
     block[selectedSet][selectedWay].tag = fileTag;
 
-}
-
-Type Cache::cacheType(){
-    if(assoc == 1 || (assoc == 1 && sets == 1)){
-        return Type::DIRECT;
-    }else if(sets == 1){
-        return Type::TOTAL;
-    }else{
-        return Type::MIXED;
-    }
 }
 
 const std::string& Cache::getBenchmark() {
