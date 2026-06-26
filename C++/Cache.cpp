@@ -178,7 +178,7 @@ const std::string& Cache::getBenchmark() {
 void Cache::printReport() const {
     uint32_t totalMisses = compMisses + capaMisses + confMisses;
 
-    double hitRate = (double) nHit / (double) nAccesses;
+    double hitRate  = (double) nHit / (double) nAccesses;
     double missRate = (double) totalMisses / (double) nAccesses;
     double compRate = (double) compMisses / (double) totalMisses;
     double capaRate = (double) capaMisses / (double) totalMisses;
