@@ -87,6 +87,14 @@ void Cache::insert(const uint32_t &new_address){
         if ( block[selectedSet][i].val == false ) {
             isThereAnyFreeSlot = true;
             selectedWay = i;
+            if ( this->subst == Subst::LRU ) {
+                for ( int v = 0; v < assoc; v++ ) {
+                    if ( block[selectedSet][v].val == true && v != i ) {
+                        block[selectedSet][v].count++;
+                    }
+                }
+                block[selectedSet][i].count = 0;
+            }
             break;
         }
     }
@@ -113,13 +121,6 @@ void Cache::insert(const uint32_t &new_address){
             case Subst::LRU : {
                 int oldestAge = -1;
                 int oldestBlock = -1;
-
-                for ( int i = 0; i < assoc; i++ ) {
-                    if ( block[selectedSet][i].val == false ) {
-                        oldestBlock = i;
-                        break;
-                    }
-                }
 
                 if ( oldestBlock == - 1 ) {
                     for ( int i = 0; i < assoc; i++ ) {
