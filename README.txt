@@ -2,10 +2,12 @@
 Linguagem de programação: C++ 
 SO: Windows 11 / Ubuntu
 O programa pode ser compilado e executado tanto no CMD quanto no VS Code;
+
 Para compilar (Windows): g++ Main.cpp Parser.cpp Cache.cpp -o cache_simulator
 Para compilar (Ubuntu): g++ Main.cpp Parser.cpp Cache.cpp -o cache_simulator
+(OBS: Lembre-se de abrir o terminal dentro da pasta em que os arquivos cpp, hpp e bin estão.)
 
-Para executar: ./cache_simulator <nsets> <bsize> <assoc> <substituição> <flag_saida> <arquivo.bin>
+Para executar, digite no terminal: ./cache_simulator <nsets> <bsize> <assoc> <substituição> <flag_saida> <arquivo.bin>
 
 # Requisitos
 Linguagem de programação: Assembly
