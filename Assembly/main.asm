@@ -1,5 +1,5 @@
 .include "macros.asm"
-.globl main
+.globl main, buffer, file_info
 .data
 file_info: .space FILE_SIZE
 buffer: .space BUFFER_SIZE
@@ -15,37 +15,31 @@ buffer: .space BUFFER_SIZE
 #java -jar Mars4_5.jar sm p main.asm pa cache_simulator 1 4 32 L 1 vortex.in.sem.persons.bin
 main:
 
-
-
 fill_args($a0, $a1, $zero, $zero)
 jal cache_initialization
 
-load_arg(cache_atrib, benchmark)
+load_arg(benchmark, cache_atrib)
 fill_args($v1, $zero, $zero, $zero)
 jal parser_initialization
 
+setRandomSeedToTime()
 
-
-reset_loop:
-load_arg(file, offset)
-move $a0, $v1
-load_arg(file, read_bytes)
-move $a1, $v1
 main_loop:
+lw $a0, file_info+offset 
+lw $a1, file_info+read_bytes
 jal read_4_bytes
 beq $v1, 1, buffer_read
+move $a0, $v0
 jal insert_cache
 j main_loop
 
 buffer_read:
+
 jal readFromFile
-bnez $v0, reset_loop
+bnez $v0, main_loop
+jal closeTheFile
+jal print_cache
 
-#jal print_cache
-
-
-
-printf("OI mae\n")
 end
 
 

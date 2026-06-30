@@ -1,6 +1,6 @@
 .include "macros.asm"
 
-.globl parser_initialization, read_4_bytes, readFromFile
+.globl parser_initialization, read_4_bytes, readFromFile, closeTheFile
 .text
 
 parser_initialization:
@@ -9,7 +9,7 @@ push($ra)
 
 openFile($a0, 0)
 bltz $v0, file_error
-sw $v0, file(file_info)
+sw $v0, file_info+file
 jal readFromFile
 j parser_initialization_done
 
@@ -25,13 +25,12 @@ jr $ra
 
 
 readFromFile:
-
-readFile($v0, buffer, BUFFER_SIZE)
-sw $v0, read_bytes(file_info)
-sw $zero, offset(file_info)
+lw $a0, file_info+file
+readFile($a0, buffer, BUFFER_SIZE)
+sw $v0, file_info+read_bytes
+sw $zero, file_info+offset
 
 jr $ra
-
 
 
 
@@ -41,7 +40,9 @@ push($ra)
 
 move $v1, $zero
 beq $a0, $a1, buffer_read 
-lw $v0, $a0(buffer)
+lw $v0, buffer($a0)
+addi $a0, $a0, 4
+sw $a0, file_info+offset
 move $a2, $v0
 jal byteSwap
 
@@ -73,14 +74,12 @@ or $v0, $v0, $t2
 
 jr $ra
 
+closeTheFile:
 
-
-
-
-
-
-
-
+lw $a0, file_info+file
+closeFile($a0)
 
 jr $ra
+
+
 
