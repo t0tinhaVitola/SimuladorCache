@@ -7,7 +7,6 @@
 .eqv confMisses $s4
 .eqv nHit $s5
 .eqv nAce $s6
-.eqv i $t1
 
 #cache_struct
 
@@ -18,11 +17,15 @@
 .eqv subst 16     
 .eqv output_flag 20
 .eqv benchmark 24
+.eqv offset_bits 28
+.eqv index_offset_bits 32
+.eqv index_mask 36
+.eqv valid_count 40
 
 
 #define 
-.eqv CACHE_SIZE 28
-.eqv MATRIX_MULT 5
+.eqv CACHE_SIZE 44
+.eqv MATRIX_MULT 8
 .eqv FILE_SIZE 12
 .eqv BUFFER_SIZE 4096
 #enum_policy
@@ -35,6 +38,11 @@
 .eqv file 0
 .eqv read_bytes 4
 .eqv offset 8
+
+#matrix struct
+
+.eqv valid 0 
+.eqv tag 4
 
 
 #macros
@@ -106,8 +114,8 @@ syscall
 
 .macro readFile(%file, %buffer_adress, %read_amount)
 move $a0, %file
-move $a1, %buffer_adress
-move $a2, %read_amount
+la $a1, %buffer_adress
+li $a2, %read_amount
 
 li $v0, 14
 syscall
@@ -118,3 +126,29 @@ li $v0, 16
 syscall
 .end_macro
 
+.macro transformToFloat(%sourceRegister, %destinationFloatRegister)
+mtc1 %sourceRegister, %destinationFloatRegister
+cvt.s.w %destinationFloatRegister, %destinationFloatRegister
+.end_macro
+
+.macro print_float(%x)
+li $v0, 2
+mov.s  $f12, %x
+syscall
+.end_macro
+
+.macro setRandomSeedToTime()
+li $v0, 30
+syscall
+move $a1, $a0
+li $v0, 40
+li $a0, 0
+syscall
+.end_macro
+
+.macro randomIntRange(%range)
+li $v0, 42
+li $a0, 0
+move $a1, %range
+syscall
+.end_macro
