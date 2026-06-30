@@ -25,20 +25,22 @@ Subst Cache::whatPolicy(const char &c){
 }
 
 Cache::Cache(int argc, char**argv) {
-        cache_name  = (argv[0]);
-        sets        = (std::stoi(argv[1]));
-        bSize       = (std::stoi(argv[2]));
-        assoc       = (std::stoi(argv[3]));
-        subst       = (whatPolicy(argv[4][0]));
-        output_flag = (std::stoi(argv[5]));
-        benchmark   = (argv[6]);
-        compMisses = 0, capaMisses = 0, confMisses = 0, nAccesses = 0, nHit = 0;
+        cache_name  = ( argv[0] );
+        sets        = ( std::stoi( argv[1] ) );
+        bSize       = ( std::stoi( argv[2] ) );
+        assoc       = ( std::stoi( argv[3] ) );
+        subst       = ( whatPolicy( argv[4][0] ) );
+        output_flag = ( std::stoi( argv[5] ) );
+        benchmark   = ( argv[6] );
+        compMisses  = 0, capaMisses = 0, confMisses = 0, nAccesses = 0, nHit = 0;
         
-        if  ( ( sets % 2 != 0 && sets != 1 ) || ( bSize % 2 != 0 && bSize != 1 ) || ( assoc % 2 != 0 && assoc != 1 ) )  {
-            std::cout << "Um dos parametros nao eh um numero divisivel por 2\n";
-            throw new std::invalid_argument("");
+        if  ( ( sets <= 0  || ( sets & ( sets - 1 ) ) != 0  ) || ( bSize <= 0 || ( bSize & ( bSize - 1 ) ) != 0 ) || ( assoc <= 0 || ( assoc & ( assoc - 1 ) ) != 0 ) )  {
+            throw std::invalid_argument("Um dos parametros nao eh um numero válido\n");
         }
 
+        if ( output_flag != 0 && output_flag != 1 ) {
+            throw std::invalid_argument("A flag utilizada nao esta disponivel! (tente 0 ou 1)\n"); 
+        }
 
         this->block.resize( this->sets );
         for ( int i = 0; i < this->sets; i++ ) {
@@ -50,17 +52,17 @@ Cache::Cache(int argc, char**argv) {
 
 void Cache::insert(const uint32_t &new_address){
     uint32_t bits_offset = 0;
-    while ((bSize >> bits_offset) > 1) {
+    while ( ( bSize >> bits_offset ) > 1 ) {
         bits_offset++;
     }
 
     uint32_t bits_index = 0;
-    while ((sets >> bits_index) > 1) {
+    while ( ( sets >> bits_index ) > 1) {
         bits_index++;
     }
     
-    int fileTag = new_address >> (bits_offset + bits_index);
-    int selectedSet = (new_address >> bits_offset) % sets;
+    int fileTag = new_address >> ( bits_offset + bits_index );
+    int selectedSet = ( new_address >> bits_offset ) % sets;
 
     for ( int i = 0; i < assoc; i++ ) {
         if ( block[selectedSet][i].tag == fileTag && block[selectedSet][i].val == true ) {
@@ -85,6 +87,14 @@ void Cache::insert(const uint32_t &new_address){
         if ( block[selectedSet][i].val == false ) {
             isThereAnyFreeSlot = true;
             selectedWay = i;
+            if ( this->subst == Subst::LRU ) {
+                for ( int v = 0; v < assoc; v++ ) {
+                    if ( block[selectedSet][v].val == true && v != i ) {
+                        block[selectedSet][v].count++;
+                    }
+                }
+                block[selectedSet][i].count = 0;
+            }
             break;
         }
     }
@@ -111,13 +121,6 @@ void Cache::insert(const uint32_t &new_address){
             case Subst::LRU : {
                 int oldestAge = -1;
                 int oldestBlock = -1;
-
-                for ( int i = 0; i < assoc; i++ ) {
-                    if ( block[selectedSet][i].val == false ) {
-                        oldestBlock = i;
-                        break;
-                    }
-                }
 
                 if ( oldestBlock == - 1 ) {
                     for ( int i = 0; i < assoc; i++ ) {
@@ -159,16 +162,6 @@ void Cache::insert(const uint32_t &new_address){
 
 }
 
-Type Cache::cacheType(){
-    if(assoc == 1 || (assoc == 1 && sets == 1)){
-        return Type::DIRECT;
-    }else if(sets == 1){
-        return Type::TOTAL;
-    }else{
-        return Type::MIXED;
-    }
-}
-
 const std::string& Cache::getBenchmark() {
     return benchmark;
 }
@@ -197,7 +190,7 @@ void Cache::printReport() const {
     std::cout << "  - Capacidade:         " << capaMisses << " (" << capaRate * 100.0 << "%)\n";
     std::cout << "  - Conflito:           " << confMisses << " (" << confRate * 100.0 << "%)\n";
     std::cout << "====================================================\n";
-    }   else    {
+    }   else if ( output_flag == 1 )    {
         std::cout << nAccesses << " " << std::fixed << std::setprecision(4) << hitRate << " " << missRate << " " << compRate << " " << capaRate << " " << confRate;
     }
-}
+}   

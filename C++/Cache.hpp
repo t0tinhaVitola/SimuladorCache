@@ -15,12 +15,6 @@ enum class Subst{
     LRU
 };
 
-enum class Type{
-    DIRECT,
-    TOTAL,
-    MIXED
-};
-
 class Cache{
 private:
     std::string cache_name;
@@ -29,7 +23,7 @@ private:
     uint32_t assoc;
     std::vector<std::vector<Block>> block;
     Subst subst;
-    bool output_flag;
+    int output_flag;
     std::string benchmark;
     unsigned int compMisses;
     unsigned int capaMisses;
@@ -42,7 +36,6 @@ public:
     Cache(int argc, char**argv);
 
     void insert(const uint32_t &new_address);
-    Type cacheType();
 
     void LRU   (const uint32_t &new_address);
     void RANDOM(const uint32_t &new_address);

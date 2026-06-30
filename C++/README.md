@@ -5,7 +5,7 @@ Este trabalho consiste na implementação de um simulador de cache em C++, a cac
 A configuração de cache deverá ser repassada por linha de comando e formatada com os seguintes parâmetros (o arquivo de entrada poderá ter extensão): "cache_simulator <nsets> <bsize> <assoc> <substituição> <flag_saida> arquivo_de_entrada"
 
 Onde cada um destes campos possui o seguinte significado:
-● cache_simulator - nome do arquivo de execução principal do simulador (todos devem usar este nome, independente da linguagem escolhida;
+● cache_simulator - nome do arquivo de execução principal do simulador (todos devem usar este nome, independente da linguagem escolhida);
 ● nsets - número de conjuntos na cache (número total de “linhas” ou “entradas” da cache);
 ● bsize - tamanho do bloco em bytes;
 ● assoc - grau de associatividade (número de vias ou blocos que cada conjunto possui);
@@ -14,3 +14,10 @@ Onde cada um destes campos possui o seguinte significado:
 ● arquivo_de_entrada - arquivo com os endereços para acesso à cache.
 
 O tamanho da cache é dado pelo produto do número de conjuntos na cache (<nsets>), tamanho do bloco em bytes (<bsize>) e associatividade (<assoc>).
+
+# Requisitos
+Linguagem de programação: C++ 
+SO: Windows 11
+O programa pode ser compilado e executado tanto no CMD quanto no VS Code;
+Para compilar: g++ Main.cpp Parser.cpp Cache.cpp cache_simulator 
+Para executar: ./cache_simulator <nsets> <bsizze> <assoc> <substituição> <flag_saida> <arquivo.bin>
