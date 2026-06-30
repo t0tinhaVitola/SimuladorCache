@@ -366,12 +366,15 @@ sll $t4, $t2, 3
 addu $t4, $t4, $t0
 lw $t5, -4($t4)
 sw $t5, 4($t4)
+lw $t8, -8($t4)
+sw $t8, ($t4)
 addi $t2, $t2, -1
 j lru_loop
 
 lru_loop_done:
-move $t4, $t0
 
+move $t4, $t0
+beq $t7, 1, lru_comp
 j conflict_miss
 
 direct_cache_case:
@@ -392,13 +395,17 @@ addi capaMisses, capaMisses, 1
 j save_adress
 
 compulsory_miss:
+
+load_arg(subst, cache_atrib)#testando se é lru
+beq $v1, LRU, lru
 move $t4, $t6 #saving registers
+lru_comp:
 li $t5, 1
 add compMisses, compMisses, $t5
-sw $t5, ($t4)
 load_arg(valid_count, cache_atrib)
 addi $v1, $v1, 1
 sw $v1, valid_count(cache_atrib)
+sw $t5, ($t4)
 
 save_adress:
 
