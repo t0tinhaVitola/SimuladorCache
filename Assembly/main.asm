@@ -1,16 +1,11 @@
 .include "macros.asm"
 .globl main, buffer, file_info
 .data
+.align 2
 file_info: .space FILE_SIZE
 buffer: .space BUFFER_SIZE
 
 .text
-
-
-
-
-
-
 #run with:
 #java -jar Mars4_5.jar sm p main.asm pa cache_simulator 1 4 32 L 1 vortex.in.sem.persons.bin
 main:

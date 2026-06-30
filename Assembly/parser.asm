@@ -25,6 +25,7 @@ jr $ra
 
 
 readFromFile:
+
 lw $a0, file_info+file
 readFile($a0, buffer, BUFFER_SIZE)
 sw $v0, file_info+read_bytes
@@ -49,6 +50,7 @@ jal byteSwap
 j read_4_bytes_done
 
 buffer_read: 
+
 li $v1, 1
 
 read_4_bytes_done:

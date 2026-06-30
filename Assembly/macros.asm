@@ -22,12 +22,13 @@
 .eqv index_mask 36
 .eqv valid_count 40
 
-
 #define 
+
 .eqv CACHE_SIZE 44
 .eqv MATRIX_MULT 8
 .eqv FILE_SIZE 12
 .eqv BUFFER_SIZE 4096
+
 #enum_policy
 
 .eqv RANDOM 0
@@ -35,6 +36,7 @@
 .eqv LRU 2
 
 #file_struct
+
 .eqv file 0
 .eqv read_bytes 4
 .eqv offset 8

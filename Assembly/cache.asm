@@ -116,6 +116,7 @@ j atoi_loop
 not_number:
 printf("Algum dos argumentos numéricos recebeu um carácter que não era um número\n")
 end
+
 atoi_done:
 
 jr $ra
@@ -125,20 +126,25 @@ jr $ra
 
 
 
+
+
+
+
 is_pair: 
 
 blez $a2, not_pair
-li $t2, 2
-div $a2, $t2
-mfhi $t2 
+addi $t2, $a2, -1
+and $t2, $t2, $a2
 beqz $t2, is_pair_done
-beq $a2, 1, is_pair_done
 not_pair:
-printf("Algum dos argumentos númericos não é par ou é menor que 1\n")
+printf("Algum dos argumentos númericos não é potencia de 2 ou é menor que 1\n")
 end
 is_pair_done:
 
 jr $ra
+
+
+
 
 
 
@@ -152,6 +158,7 @@ lb $t3, 1($a2)
 beqz $t3, is_char
 printf("O parâmetro método de substituição deve ser composto por apenas um carácter\n")
 end
+
 is_char:
 lb $t3, ($a2)
 bne $t3, 'R', not_RANDOM
@@ -170,6 +177,7 @@ printf("Carácter inválido, deve ser: R, F ou L\n")
 end
 
 what_policy_done:
+
 jr $ra
 
 
@@ -261,8 +269,6 @@ jr $ra
 insert_cache:
 
 push($ra)
-
-
 
 jal get_set
 move $t0, $v0
